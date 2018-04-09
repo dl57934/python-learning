@@ -1,27 +1,26 @@
 import openpyxl
-
-filename = "stat_104102.xlsx"
-
-book = openpyxl.load_workbook(filename)
-sheet = book.worksheets[0]
+filename = "popular.xlsx"
 
 data = []
 
-for row in sheet.rows:
-    data.append([row[0].value, row[9].value])
-del data[0]
-del data[0]
-del data[0]
-del data[0]
-del data[len(data)-1]
-del data[len(data)-1]
+book = openpyxl.load_workbook(filename)
+shell = book.worksheets[0]
 
+for row in shell.rows:
+    data.append([row[0].value, row[9].value])
+print(data)
+for i in range(0,4):
+    del data[0]
+
+del data[len(data)-1]
+del data[len(data)-1]
+del data[len(data)-1]
 
 for a in data:
-   a[1] =  a[1].replace(",","")
+    a[1]=a[1].replace(",","")
 
-
-data = sorted(data, key = lambda x:int(x[1]))
+data = sorted(data,key = lambda x: int(x[1]))
 
 for i,a in enumerate(data):
-    print(i+1, a[0],a[1])
+    if (i>=5): break
+    print(i+1,a[0],a[1])
