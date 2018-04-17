@@ -1,16 +1,19 @@
+
+from sklearn import svm, metrics
 import pandas as pd
-from sklearn import svm,metrics
 from sklearn.model_selection import train_test_split
 
 csv = pd.read_csv('iris.csv')
-data = csv[["SepalLength","SepalWidth","PetalLength","PetalWidth"]]
-Name = csv ["Name"]
-
-train_data, test_data, train_label, test_label = train_test_split(data,Name)
-
+inputName = csv[["SepalLength","SepalWidth","PetalLength","PetalWidth"]]
+resultName = csv["Name"]
+#뒤에 test_case 옵션때문에 150개의 데이터 중 50개가 테스트 데이터로 간다.
+trainData, testData, trainResult, testResult = train_test_split(inputName,resultName,test_size=0.33)
 clf = svm.SVC()
-clf.fit(train_data,train_label)
-pre = clf.predict(test_data)
+#머신러닝
+clf.fit(trainData, trainResult)
+#앞선 훈련 결과로 테스트 데이터 예측값 구하기
+pre = clf.predict(testData)
 
-result = metrics.accuracy_score(pre,test_label) 
-print('정답률',result)
+score = metrics.accuracy_score(pre, testResult)
+
+print("정답률",score)
