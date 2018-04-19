@@ -1,23 +1,20 @@
+import os.path, gzip, os
 import urllib.request as req
-import gzip, os ,os.path
-
 filename = ["train-images-idx3-ubyte.gz","train-labels-idx1-ubyte.gz","t10k-images-idx3-ubyte.gz","t10k-labels-idx1-ubyte.gz"]
 
-storageLocation = "./trainImages"
+baseurl = 'http://yann.lecun.com/exdb/mnist/'
 
-if not os.path.exists(storageLocation): os.mkdir(storageLocation)
-baseUrl = "http://yann.lecun.com/exdb/mnist"
+savepath= './trainImages'
+if not os.path.exists(savepath): os.mkdir(savepath)
 for f in filename:
-    if not os.path.exists(storageLocation+f):
-        req.urlretrieve(baseUrl+"/"+f,storageLocation+"/"+f)
+    url = baseurl + f
+    loc = savepath+'/'+f
+    if not os.path.exists(loc): 
+        req.urlentrieve(url,loc)
 
 for f in filename:
-    gfile = storageLocation +"/"+ f
-    fFile = storageLocation+"/"+f.replace(".gz","")
-    with gzip.open(gfile,"rb") as fp:
+    savefile = f.replace(".gz","")
+    with gzip.open(savepath+'/'+f,'rb') as fp:
         body = fp.read()
-        with open(fFile,"wb") as w:
-            w.write(body)
-
-        
-        
+        with open(savepath+"/"+savefile,'wb') as w:
+             w.write(body)

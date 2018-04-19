@@ -1,27 +1,28 @@
 import struct 
 
-def to_csv(name,maxdata):
-    savePath = "./trainImages/"
-    lbl_f = open(savePath+name+"-labels-idx1-ubyte","rb")
-    img_f = open(savePath+name+"-images-idx3-ubyte","rb")
-    csv_f = open(savePath+name+".csv","w",encoding="utf-8")
-    # 숫자 2개가 1바이트 
-    mag, img_count = struct.unpack(">II",img_f.read(8))
-    mag, lbl_count = struct.unpack(">II",lbl_f.read(8))
-    rows, cols = struct.unpack(">II",img_f.read(8))
-    pixels = rows *cols
-    res = []
-    for idx in range(lbl_count):
-        if idx > maxdata: break
-        label = struct.unpack("B",lbl_f.read(1))[0]
-        # bdata는 바이트
-        bdata = img_f.read(pixels)
-        sdata = list(map(lambda n: str(n),bdata))
-        csv_f.write(str(label)+',')
-        csv_f.write(",".join(sdata)+"\r\n")
-        
-    lbl_f.close()
-    img_f.close()
-    csv_f.close()
-to_csv('train',30000)
-to_csv('t10k',1000)
+def load_csv(fname,maxdata):
+    img_name = "./trainImages/"+fname + "-images-idx3-ubyte"
+    lable_name = "./trainImages/"+fname +"-labels-idx1-ubyte"
+    img_file = open(img_name,'rb')
+    lable_file = open(lable_name,'rb')
+    csvf_file = open("./trainImages/"+fname+".csv",'w',encoding = 'utf-8')
+    mag, img_length = struct.unpack(">II",img_file.read(8))
+    mag, lable_length = struct.unpack(">II",lable_file.read(8))
+    rows, cols = struct.unpack(">II",img_file.read(8))
+    pixels = rows * cols
+    for idx in range(img_length):
+        if idx > maxdata : break
+        label = struct.unpack("B",lable_file.read(1))[0]
+        bdata = img_file.read(pixels)
+        sdata = list (map(lambda a :str(a),bdata))
+        csvf_file.write(str(label)+',')
+        csvf_file.write(','.join(sdata)+"\r\n")
+    lable_file.close()
+    img_file.close()
+    csvf_file.close()
+
+
+
+
+load_csv('t10k',3000)
+load_csv('train',500)
