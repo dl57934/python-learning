@@ -1,44 +1,43 @@
-from sklearn import svm,metrics
-import os.path,re,json,glob
+from sklearn import svm, metrics
+import json, os.path, glob, re
 
+#파일 읽어와서 확인하는 
 def checkLang(filename):
-    basename = os.path.basename(filename)
-    label = re.match(r'^[a-z]{2,}',basename).group()
-    with open(filename,'r',encoding='utf-8') as fp:
+    base = os.path.basename(filename)
+    label = re.match('^[a-z]{2,}',base).group()
+    with open(filename ,'r',encoding= 'utf-8') as fp:
         text = fp.read()
     text = text.lower()
-    lang = [0 for n in range(0,26)]
-    ordA = ord('a')
-    ordB = ord('z')
-    for letter in text:
-        inputOrd = ord(letter)
-        if ordA <= inputOrd <= ordB:
-            lang[inputOrd - ordA] += 1
-    total = sum(lang)
-    freq = list(map(lambda n:n/total,lang))
-    return (freq,label)
+    lang_dict = [0 for n in range(0,26)]
+    ord_a = ord('a')
+    ord_z = ord('z')
+    for f in text:
+        ch = ord(f)
+        if ord_a <= ch <= ord_z:
+            lang_dict[ch-ord_a] += 1
+    total = sum(lang_dict)
+    return (list(map(lambda n : n/total,lang_dict)),label)      
 
 
 def load_file(filename):
     label = []
-    freq = []
+    data = []
+#전체 파일 리스트
     fileList = glob.glob(filename)
     for f in fileList:
-        data = checkLang(f)
-        label.append(data[1])
-        freq.append(data[0])
-    return (freq,label)
+        fileData = checkLang(f)
+        label.append(fileData[1])
+        data .append(fileData[0])
+    return (data,label)
 
 
-testData = load_file("./lang/test/*.txt")
-trainData = load_file('./lang/train/*.txt')
-
+study_data  = load_file('./lang/train/*.txt')
+test_data  = load_file('./lang/test/*.txt')
 clf = svm.SVC()
-clf.fit(trainData[0],trainData[1])
-pre = clf.predict(testData[0])
 
-score = metrics.accuracy_score(pre,testData[1])
-report = metrics.classification_report(pre,testData[1])
-
+clf.fit(study_data[0],study_data[1])
+pre = clf.predict(test_data[0])
+score = metrics.accuracy_score(pre,test_data[1])
+report = metrics.classification_report(pre,test_data[1])
 print(score)
 print(report)
