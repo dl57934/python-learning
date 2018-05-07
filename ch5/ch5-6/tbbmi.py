@@ -19,26 +19,28 @@ test_ans = list(test_csv["label_pat"])
 
 x = tf.placeholder(tf.float32,[None,2])
 y_ = tf.placeholder(tf.float32,[None,3])
-
+with tf.name_scope('information')as name:
 #가중치 정의
-W = tf.Variable(tf.zeros([2,3]));
+    W = tf.Variable(tf.zeros([2,3]),name="W");
 #y인자 정의
-b = tf.Variable(tf.zeros([3]));
-
+    b = tf.Variable(tf.zeros([3]),name="b");
+    with tf.name_scope('softmax') as name:
 #softmax 회귀 정의
-y = tf.nn.softmax(tf.matmul(x,W)+b)
+        y = tf.nn.softmax(tf.matmul(x,W)+b)
+with tf.name_scope('loss') as loss:
+    #오차함수 사용 y->예상레이블 y_ -> 정답레이블
+    cross_entropy = -tf.reduce_sum(y_ * tf.log(y))
+with tf.name_scope('train') as train:
+    #경사 하강법 학습률 0.01 매개변수 자동으로 구해줌 
+    optimizer = tf.train.GradientDescentOptimizer(0.03)
+    #오차함수가 최소로 되게 만들어 준다. 
+    train = optimizer.minimize(cross_entropy)
 
-#오차함수 사용 y->예상레이블 y_ -> 정답레이블
-cross_entropy = -tf.reduce_sum(y_ * tf.log(y))
-#경사 하강법 학습률 0.01 매개변수 자동으로 구해줌 
-optimizer = tf.train.GradientDescentOptimizer(0.03)
-#오차함수가 최소로 되게 만들어 준다. 
-train = optimizer.minimize(cross_entropy)
-
-#예측과 같은지 판단 
-predict = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
-#
-accuracy = tf.reduce_mean(tf.cast(predict, tf.float32))
+with tf.name_scope('accuracy') as acc:
+    #예측과 같은지 판단 
+    predict = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
+    #
+    accuracy = tf.reduce_mean(tf.cast(predict, tf.float32))
 
 sess = tf.Session()
 sess.run(tf.global_variables_initializer())
