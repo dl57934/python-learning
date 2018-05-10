@@ -37,7 +37,7 @@ train = optimizer.minimize(cross_entropy)
 
 #예측과 같은지 판단 
 predict = tf.equal(tf.argmax(y,1), tf.argmax(y_,1))
-#
+#1
 accuracy = tf.reduce_mean(tf.cast(predict, tf.float32))
 
 sess = tf.Session()
@@ -51,7 +51,6 @@ for step in range(3500):
 
     x_pat = rows[["weight","height"]]
     y_ans = list(rows["label_pat"])
-
     fd = {x:x_pat, y_:y_ans}
     #최소 매개변수를 찾으려고 실행시킴
     sess.run(train, feed_dict=fd)
@@ -61,5 +60,5 @@ for step in range(3500):
         print("step=",step,"acc=",acc)
 
 acc = sess.run(accuracy,feed_dict={x:test_pat,y_:test_ans})
-print(acc)
 
+print(acc)
