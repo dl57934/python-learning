@@ -7,7 +7,7 @@ print(v)
 v = np.arange(10,dtype=np.int32)
 print(v)
 
-v*=3
+v*=4
 print(v)
 
 print(v.mean())
