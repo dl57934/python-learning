@@ -1,5 +1,6 @@
 import requests
 import json
+from bs4 import BeautifulSoup
 session = requests.session()
 url = "https://m.search.naver.com/p/csearch/ocontent/spellchecker.nhn"
 
@@ -11,9 +12,12 @@ header = {
         ,"user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36"
    }
 
-params = {"_callback":"window.__jindo2_callback._spellingCheck_0","q":inputData}
+params = {"_callback":"window.__jindo2_callback._spellingCheck_0","q":"난 너가 제일 싫어"}
 res = requests.get(url,params=params,headers=header)
-print(res.text[42:])
-
+textLength = len(res.text)
+jsonData = res.text[42:textLength-2]
+jsonData =json.loads(jsonData)
+bsData = BeautifulSoup(jsonData["message"]["result"]["html"],'html.parser')
+print(bsData.getText())
 
 
