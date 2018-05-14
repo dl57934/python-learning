@@ -13,7 +13,7 @@ header = {
 
 params = {"_callback":"window.__jindo2_callback._spellingCheck_0","q":inputData}
 res = requests.get(url,params=params,headers=header)
-print(res.text)
+print(res.text[42:])
 
 
 
