@@ -14,7 +14,6 @@ def setWord_dic(words):
             word_dic["MAX"] +=1
         else :
             wid = word_dic[word]
-        print(word,word_dic[word])
         result.append(wid)
     return result
 
@@ -37,12 +36,13 @@ def getResult(limit = 0):
     categoryNum = 0
     filesName = os.listdir(root_dir)
     for category in filesName:
-        categoryNum += 1
         i = 0
         files = glob.glob(root_dir+category+"/*.wakati")
         if os.path.isdir(root_dir+category):
+            categoryNum+=1
             for fileName in files:
                 Y.append(categoryNum-1)
+                print(categoryNum-1)
                 with open(fileName,"r") as fp:
                     X.append( getCnt(setWord_dic(fp.read().strip().split(' '))))
                 if limit > 0:
