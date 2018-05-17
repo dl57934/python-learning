@@ -12,14 +12,12 @@ def makingXY(limit=0):
     X = []
     i = 0
     for fileName in fileList:
-        print(fileName)
         if os.path.isdir(root+fileName):
-            Xdata = globFile(root+fileName,Y,i,limit)
-            X.append(Xdata)
+            Xdata = globFile(root+fileName,X,Y,i,limit)
             i+=1
     return X,Y
 
-def globFile(fileName,Y,categoryNum,limit):
+def globFile(fileName,X,Y,categoryNum,limit):
     fileList = glob.glob(fileName+"/*.txt.wakati")
     r = []
     result = []
@@ -29,12 +27,10 @@ def globFile(fileName,Y,categoryNum,limit):
         Xdata = fileRead(fileName)
         Xdata = incWordDic(Xdata)
         cnt = setCnt(Xdata)
-        r.append(cnt)
         if limit > 0:
-            if limit ==j:break
+            if limit == j:break
             j+=1
-    result.append(r)
-    return result
+        X.append(cnt)
 
 
 def fileRead(fileName):
